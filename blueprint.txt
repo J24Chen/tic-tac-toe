@@ -1,0 +1,24 @@
+Process:
+
+First start off with a console build, make the game doable with console first.
+
+
+Main Objects:
+
+    GameBoard:
+        a 2D array that contains the information of the current game being played
+
+            - Prevent players from placing out of bounds and in taken spots
+
+    GameState:
+        Manages the turns of each player, making sure 
+
+    Player(1,2):
+        player 1 is X, player 2 is O. 
+
+
+Conditions:
+    checkWin:
+        Checks if a player has scored in a row, column or diagonal.
+
+
