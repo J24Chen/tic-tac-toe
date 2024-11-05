@@ -2,31 +2,72 @@ const boxArray = document.querySelectorAll('.box');
 const player1turn = document.querySelector('.player1-turn');
 const player2turn = document.querySelector('.player2-turn');
 const gameText = document.querySelector('.game-text');
+const restartButton = document.querySelector('.reset');
+const dialog = document.querySelector("dialog");
+const submitButton = document.querySelector(".submit-button");
+
+const player1Input = document.querySelector("#player1-name");
+const player2Input = document.querySelector("#player2-name");
+
+/*Player function isn't needed to be an IIFE due to limited functions, 
+but for the spirit of this practice project, we'll make it
+*/
+const playerHandler = function () {
+    let player1 = 'player 1';
+    let player2 = 'player 2';
+
+    const getPlayer1 = () => player1;
+    const getPlayer2 = () => player2;
+    const setPlayer1 = (str) => { player1 = str };
+    const setPlayer2 = (str) => { player2 = str };
+    return {getPlayer1, getPlayer2, setPlayer1, setPlayer2}
+}();
+
+
+dialog.showModal();
+
+submitButton.addEventListener("click", (e) => {
+    e.preventDefault();
+    playerHandler.setPlayer1(player1Input.value);
+    playerHandler.setPlayer2(player2Input.value);  
+    player1turn.textContent = (`${playerHandler.getPlayer1()}'s turn`)
+    player2turn.textContent = (`${playerHandler.getPlayer2()}'s turn`)
+    dialog.close();
+});
+
+//TODO: Make input from player1 and player2 accepted, then integrate it into the code.
+
 
 for (let i = 0; i < boxArray.length;i++){
     boxArray[i].addEventListener("click", (e) => {
-        console.log(i);
-        
         playerMove(i,e.target);
-        
     });
-}
+}   
 
 
-
-
-
+/* 
+GameBoard is an object that handles the events that occur on the board. 
+This includes adding moves, resetting board, legal moves, winning moves and ties.
+*/
 const gameBoard = (function () {
-    const boardState = [ 
+    let boardState = [ 
         [null,null,null,],
         [null,null,null,],
         [null,null,null,]
     ]
 
+    const resetBoard = () => {
+        boardState = [ 
+            [null,null,null,],
+            [null,null,null,],
+            [null,null,null,]
+        ]
+    }
+
 
     const placeItem = (row,col,mark) =>
     {
-        if (boardState[row][col] === null) {
+        if (boardState[row][col] == null) {
             boardState[row][col] = mark;
             return true;
         } else {
@@ -72,11 +113,11 @@ const gameBoard = (function () {
 
     }
 
-    return {placeItem, getState, checkRow, checkCol, checkDiagonal, checkWinCon, checkTie}
+    return {placeItem, resetBoard, getState, checkRow, checkCol, checkDiagonal, checkWinCon, checkTie}
 })();
 
 
-//TODO: figure out why turn variable doesn't change
+
 const turnHandler = (function () {
     let turn = 'x';
 
@@ -92,7 +133,10 @@ const turnHandler = (function () {
             player1turn.style.visibility = "visible";
         }   
     }
-    return {getTurn, changeTurn}
+    const setTurn = (str) => {
+            turn = str
+        };
+    return {getTurn, changeTurn,setTurn}
 })();
 
 
@@ -110,34 +154,66 @@ function playerMove(placement,box) {
         if (checkValidPlacement) {
             box.textContent = mark;
             turnHandler.changeTurn();
+            gameText.style.visibility = "hidden";
         } else {
-            gameText.textContent = "INVALID PLACEMENT: go again!"
+            gameText.style.visibility = "visible";
+            gameText.textContent = "INVALID PLACEMENT: go again!";
         }
             
 //Refactor this 
     if((gameBoard.checkWinCon(row,col,mark))){
-        disableButtons();
+        toggleButtons(false);
         player2turn.style.visibility = "hidden";
         player1turn.style.visibility = "hidden";
-        gameText.textContent = `${mark} has won!`;
+        gameText.style.visibility = "visible";
+
+        if (mark == 'x') {
+            gameText.textContent = `${playerHandler.getPlayer1()} has won!`;
+        }
+        else {
+            gameText.textContent = `${playerHandler.getPlayer2()} has won!`;
+        }
     }
 
     if(gameBoard.checkTie()) {
-        disableButtons();
+        toggleButtons(false);
         player2turn.style.visibility = "hidden";
         player1turn.style.visibility = "hidden";
+        gameText.style.visibility = "visible";
         gameText.textContent = "NO ONE WINS."
     }
 
     
 }
 
-function disableButtons(){
-    for (i = 0; i < boxArray.length; i++) {
-        boxArray[i].disabled = true;
-        boxArray[i].style.backgroundColor = "#DADAD9";
-        
+function toggleButtons(bool){
+    if(bool) { 
+        for (i = 0; i < boxArray.length; i++) {
+            boxArray[i].disabled = false;
+            boxArray[i].style.backgroundColor = "#fff;";
+        }
+    } else {
+        for (i = 0; i < boxArray.length; i++) {
+            boxArray[i].disabled = true;
+            boxArray[i].style.backgroundColor = "#afeed456;";
+        }
     }
+        
+}
+
+function resetBoxes() {
+    for (let i = 0; i < boxArray.length;i++){
+        boxArray[i].textContent = "";
+    }   
 }
 
 
+restartButton.addEventListener("click", () => {
+    turnHandler.setTurn('x');
+    gameBoard.resetBoard();
+    resetBoxes();
+    toggleButtons(true);
+    player2turn.style.visibility = "hidden";
+    player1turn.style.visibility = "visible";
+    gameText.style.visibility = "hidden";
+});

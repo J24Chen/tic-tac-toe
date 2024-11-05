@@ -6,16 +6,62 @@
     font-family: "Lexend", sans-serif;
 }
 
+dialog {
+    margin:auto;
+    height:12rem;
+    padding:3rem;
+    width:20rem;
+    box-shadow: 2px 4px 3px 0px rgba(0,0,0,0.7);
+    border-radius: 10px;
+}
+
+
+
+form {
+    display: grid;
+    overflow:visible;
+    box-sizing: border-box;
+    justify-content: center;
+}
+
+form input {
+    border-radius: 5px;
+    padding:5px;
+    box-sizing: border-box;
+    width:200px;
+    font-family: inherit;
+    font-size: 100%;
+    box-shadow: 2px 4px 3px 0px rgba(0,0,0,0.1);
+    border-color:rgb(15, 80, 69);
+    margin-bottom: 1rem;
+    outline:none;
+}
+
+form button {
+    border-radius: 5px;
+    border: 2px solid #000;
+    border-color:rgb(15, 80, 69);
+    padding:0.5rem;
+    box-sizing: border-box;
+    width:200px;
+}
+
+
 header {
     text-align: center;
 }
 
+.game-text {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-size:2rem;
+}
 
 .game-ui {
     display: flex;
     justify-content: center;
 }
-.game-container {
+.box-container {
 
     width:fit-content;
     display: grid;
@@ -26,8 +72,16 @@ header {
 
 .box {
     height:200px;
-    border-radius: 10px;
+    border-radius: 1px;
     font-size: 4rem;
+    outline:none;
+    border: 1px solid #000;
+    background-color: #fff;
+}
+
+.box:hover {
+    background-color: #afeed456;
+    cursor: pointer;
 }
 
 .player1-turn,
@@ -41,3 +95,42 @@ header {
 }
 
 
+.top {
+    border-top: none;
+}
+
+.left {
+    border-left: none;
+}
+
+.bottom {
+    border-bottom: none;
+}
+
+.right{ 
+    border-right: none;
+}
+
+.game-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.reset {
+    margin-top:20px;
+    padding:10px;
+    border: 2px solid #000;
+    border-radius: 5px;
+    width:fit-content;
+    align-self: center;
+    font-size:1rem;
+    background-color: #fff;
+    width:8rem;
+
+}
+
+.reset:hover {
+    cursor: pointer;
+    background-color: #38bdf8;
+
+}
